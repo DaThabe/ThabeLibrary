@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ThabeBot\Thabe.ChatBot.csproj" />
-    <ProjectReference Include="..\ThabeKit\Thabe.Kit.csproj" />
+    <ProjectReference Include="..\Thabe.ChatBot\Thabe.ChatBot.csproj" />
+    <ProjectReference Include="..\Thabe.Kit\Thabe.Kit.csproj" />
   </ItemGroup>
 
   <ItemGroup>
