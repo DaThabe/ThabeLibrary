@@ -1,0 +1,39 @@
+﻿{
+  "id": "com.dathabe",
+  "name": "测试",
+  "ver": "0.0.1",
+  "desc": "这是一个测试用的模板",
+  "class_path": "Thabe.ChatBot.Plugin.Com.DaThabe.Commands",
+  "domain": {
+    "name": "dathabe",
+    "alias": [ "thabe" ]
+  },
+  "tokens": {
+    "repeat": [ "复读" ],
+    "say": [ "说" ],
+    "quote": [ "引用" ]
+  },
+  "params": {
+    "plain_text": "\\w+"
+  },
+  "commands": [
+    {
+      "name": "复读下一句话",
+      "describe": "就是复读下一句话",
+      "expr": [ "tokens.repeat" ],
+      "action": "Repeat"
+    },
+    {
+      "name": "引用一个消息",
+      "describe": "就是引用一个消息",
+      "expr": [ "tokens.quote" ],
+      "action": "Quote"
+    },
+    {
+      "name": "说一句话",
+      "describe": "就是引用一个消息",
+      "expr": [ "tokens.say", "params.plain_text" ],
+      "action": "Say"
+    }
+  ]
+}
