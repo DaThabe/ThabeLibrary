@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
 using System.Linq;
