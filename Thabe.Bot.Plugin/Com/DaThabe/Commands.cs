@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
 using System.Linq;
@@ -65,7 +65,7 @@ internal class Commands : ICommandPlugin
     {
         this.SetAtionContext(ReceiveMessage);
 
-        await this.GetReceiver().ReplyAsync("复读吗", Replys.At | Replys.Quote | Replys.Recall, 5000);
+        await this.GetReceiver().ReplyAsync("下一句就复读", Replys.At | Replys.Quote | Replys.Recall, 5000);
 
 
         async void ReceiveMessage()
