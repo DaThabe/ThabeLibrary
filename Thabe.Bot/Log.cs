@@ -3,7 +3,7 @@
 
 public static class Log
 {
-    public static void Write(MessageChain chain)
+    public static void Write(MessageChain chain, LogLevel level = LogLevel.Console)
     {
         StringBuilder sb = new();
         foreach(var i in chain)
@@ -15,17 +15,32 @@ public static class Log
             else sb.Append($"{i.Type}");
         }
 
-        Write(sb.ToString());
+        Write(sb.ToString(), level);
     }
 
-    public static void Write(Exception e)
+    public static void Write(Exception e, LogLevel level = LogLevel.ConsoleAndMaster)
     {
-        Write(e.Message);
+        Write(e.Message, level);
     }
 
-    public static void Write(string msg)
+    public static void Write(string msg, LogLevel level = LogLevel.Console)
     {
+        var log_text = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {msg}";
 
-        Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {msg}");
+        if ((level & LogLevel.Console) == LogLevel.Console)
+        {
+            Console.WriteLine(log_text);
+        }
+        if((level & LogLevel.ConsoleAndMaster) == LogLevel.ConsoleAndMaster)
+        {
+            MessageManager.SendFriendMessageAsync(QQBot.Master, log_text);
+        }
     }
+}
+
+public enum LogLevel
+{
+    Console,
+
+    ConsoleAndMaster
 }

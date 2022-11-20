@@ -9,6 +9,23 @@ namespace Thabe.Bot.QQ;
 /// </summary>
 public class QQBot
 {
+    static QQBot()
+    {
+        string icon = """
+             _____ _           _            ____        _   
+            |_   _| |__   __ _| |__   ___  | __ )  ___ | |_ 
+              | | | '_ \ / _` | '_ \ / _ \ |  _ \ / _ \| __|
+              | | | | | | (_| | |_) |  __/ | |_) | (_) | |_ 
+              |_| |_| |_|\__,_|_.__/ \___| |____/ \___/ \__|
+                                                            
+            """;
+
+        Console.WriteLine(icon);
+    }
+
+
+    public static string Master { get; set; } = "2217568525";
+
     /// <summary>
     /// MiraiBot实例
     /// </summary>

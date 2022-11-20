@@ -4,6 +4,7 @@ using Mirai.Net.Data.Messages.Concretes;
 using System.Linq;
 using Thabe.Bot.QQ;
 using Thabe.Bot.Plugin.Command;
+using System.Threading.Tasks;
 
 namespace Thabe.Bot.Plugin.Com.DaThabe;
 
@@ -61,18 +62,19 @@ internal class Commands : ICommandPlugin
     /// <summary>
     /// 复读
     /// </summary>
-    public async void Repeat()
+    public void Repeat()
     {
-        this.SetAtionContext(ReceiveMessage);
+        this.ReplyToBuffer("复读吗",Replys.Quote);
+        this.ReplyToBuffer("下一句复读",Replys.Quote);
+        
+        this.SetAtionContext(ReceiveMessage, 5000);
 
-        await this.GetReceiver().ReplyAsync("复读吗", Replys.At | Replys.Quote | Replys.Recall, 5000);
 
-
-        async void ReceiveMessage()
+        void ReceiveMessage()
         {
             var recevier = this.GetReceiver();
 
-            await recevier.ReplyAsync(recevier.MessageChain.GetPlainMessage(), Replys.At | Replys.Quote | Replys.Recall, 5000);
+            this.ReplyToBuffer(recevier.MessageChain.GetPlainMessage(), Replys.At | Replys.Quote | Replys.Recall, 5000);
         }
     }
 
@@ -102,7 +104,7 @@ internal class Commands : ICommandPlugin
     }
 
 
-    public void Reload()
+    public async void Reload()
     {
         foreach(var i in CommandPluginExtend.Plugins)
         {
@@ -110,5 +112,7 @@ internal class Commands : ICommandPlugin
             i.Reload();
             Console.WriteLine($"重载成功: [{i.Meta.Name}]");
         }
+
+        await Task.CompletedTask;
     }
 }

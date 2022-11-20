@@ -1,4 +1,6 @@
-﻿namespace Thabe.Bot.Plugin.Command;
+﻿using System.Threading;
+
+namespace Thabe.Bot.Plugin.Command;
 
 
 /// <summary>
@@ -61,15 +63,18 @@ public static class CommandPluginExtend
             context.CurrentAction = null;
 
             action?.Invoke();
+            release_message();
 
             //如果下来没有动作则移除上下文
             if (context.CurrentAction == null)
             {
                 context.CurrentAction = context.FirstAction;
                 _memberContexts.Remove(id);
+
+                return;
             }
 
-            return;
+            msg_context_timeout();
         }
 
 
@@ -112,15 +117,53 @@ public static class CommandPluginExtend
             PluginTempalte = excute.plugin,
             MatchGroup = ((RegexTrigger)excute.Trigger).GetMatchGroup(cmd_str)
         };
-        first_action();
+
+        first_action?.Invoke();
+        release_message();
+
 
         //瞬态对话
         if (_memberContexts[id].CurrentAction == _memberContexts[id].FirstAction)
         {
             _memberContexts.Remove(id);
+            return;
         }
 
-        return;
+        msg_context_timeout();
+
+
+        async void msg_context_timeout()
+        {
+            if (!_memberContexts.TryGetValue(id, out var context)) return;
+
+            if (context.TimeOut < 0) return;
+
+            
+            var timeout = context.TimeOut;
+            context.TimeOut = 0;
+
+            await Task.Delay(timeout);
+
+            if (context.TimeOut <= 0) return;
+
+            var receiver = context.PluginInstance.GetReceiver();
+            await receiver.ReplyAsync($"[{context.FirstAction.Method.Name}] 任务已超时!");
+
+            _memberContexts.Remove(id);
+        }
+
+        void release_message()
+        {
+            var context = _memberContexts[id];
+            var rece = context.PluginInstance.GetReceiver();
+
+            foreach (var i in context.MsgBuffer)
+            {
+                rece.ReplyAsync(i.Chain, i.Mode, i.RecallTime).GetAwaiter().GetResult();
+            }
+
+            context.MsgBuffer.Clear();
+        }
 
         string? get_member_id()
         {
@@ -164,12 +207,30 @@ public static class CommandPluginExtend
     /// <summary>
     /// 设置动作上下文
     /// </summary>
-    public static void SetAtionContext(this ICommandPlugin plugin, Action action)
+    public static void SetAtionContext(this ICommandPlugin plugin, Action action, int timeout = 15000)
     {
         var context = plugin.GetPluginContext();
         if (context == null) return;
 
         context.CurrentAction = action;
+        context.TimeOut = timeout;
+    }
+
+    /// <summary>
+    /// 添加消息进入缓存区 将在方法结束收统一发送
+    /// </summary>
+    /// <param name="plugin"></param>
+    /// <param name="msg"></param>
+    /// <param name="replys"></param>
+    /// <param name="recallTime"></param>
+    public static void ReplyToBuffer(this ICommandPlugin plugin, string msg, Replys replys = Replys.None, int recallTime = 0)
+    {
+        plugin.GetPluginContext().MsgBuffer?.Add(new()
+        {
+            Chain = new() { new PlainMessage(msg) },
+            Mode = replys,
+            RecallTime = recallTime
+        });
     }
 
     /// <summary>
@@ -212,7 +273,16 @@ public class CommandPluginContext
     /// 当前动作
     /// </summary>
     public required Action? CurrentAction { get; set; }
+    
+    /// <summary>
+    /// 上下文等待时长
+    /// </summary>
+    public int TimeOut { get; set; } = 0;
 
+    /// <summary>
+    /// 消息暂存区
+    /// </summary>
+    public List<MessageBlock> MsgBuffer { get; } = new();
 
     /// <summary>
     /// 消息接收器
@@ -223,4 +293,14 @@ public class CommandPluginContext
     /// 触发器匹配结果
     /// </summary>
     public required GroupCollection MatchGroup { get; set; }
+}
+
+
+public class MessageBlock
+{
+    public required MessageChain Chain { get; init; }
+
+    public required Replys Mode { get; init; }
+
+    public required int RecallTime { get; init; }
 }

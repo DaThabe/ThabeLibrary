@@ -26,9 +26,9 @@ public abstract class ScriptPlugin : ICommandPluginTemplate
 
     public required string TypeName { get; init; }
 
-    public Type? PluginType { get; private set; }
+    public Type PluginType { get; private set; }
 
-    public ICommandPluginMeta? Meta { get; private set; }
+    public ICommandPluginMeta Meta { get; private set; }
 
     #endregion
 

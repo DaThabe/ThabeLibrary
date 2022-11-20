@@ -105,14 +105,7 @@ public class CommandPluginConfigAttribute : Attribute, ICommandPluginMeta
 
         #endregion
 
-        /// <summary>
-        /// 实例化指令
-        /// </summary>
-        /// <param name="pluginInfo"></param>
-        /// <param name="cmdDefine"></param>
-        /// <param name="actionType"></param>
-        /// <param name="cmdJsonToken"></param>
-        /// <returns></returns>
+        ///加载指令
         CommandMeta load_command(dynamic cmdJsonToken)
         {
             //指令名称

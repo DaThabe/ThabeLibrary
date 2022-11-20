@@ -3,7 +3,6 @@
 namespace Thabe.Bot.Plugin.Command;
 
 
-
 /// <summary>
 /// 本地脚本插件
 /// </summary>
@@ -18,6 +17,7 @@ public class LocalCommandScriptPlugin : ScriptPlugin
         return File.ReadAllText(FilePath);
     }
 }
+
 
 /// <summary>
 /// 网络脚本插件
