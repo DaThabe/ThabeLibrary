@@ -1,4 +1,7 @@
-﻿namespace Thabe.ChatBot.QQ;
+﻿using Thabe.Bot.Plugin;
+using Thabe.Bot.Plugin.Command;
+
+namespace Thabe.Bot.QQ;
 
 
 /// <summary>
@@ -20,13 +23,24 @@ public class QQBot
             Address = addres
         };
 
+        Log.Write($"Bot [{qq}] 已创建");
+        Log.Write($"绑定地址: [{addres}]");
+
 
         _miraiBot.MessageReceived.OfType<MessageReceiverBase>().Subscribe(PluginCall);
+        Log.Write($"绑定插件响应");
     }
 
     private void PluginCall(MessageReceiverBase receiver)
     {
-        receiver.CallCommandPlugin();
+        try
+        {
+            receiver.CallCommandPlugin();
+        }
+        catch (Exception ex)
+        {
+            Log.Write(ex);
+        }
     }
 
 
@@ -34,5 +48,9 @@ public class QQBot
     /// 启动Bot
     /// </summary>
     /// <returns></returns>
-    public async Task LaunchAsync() => await _miraiBot.LaunchAsync();
+    public async Task LaunchAsync()
+    {
+        Log.Write("Bot 启动中");
+        await _miraiBot.LaunchAsync();
+    }
 }

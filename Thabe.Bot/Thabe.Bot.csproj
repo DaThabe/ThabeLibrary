@@ -16,11 +16,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.4.0" />
     <PackageReference Include="Mirai.Net" Version="2.4.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ThabeKit\Thabe.Kit.csproj" />
+    <ProjectReference Include="..\Thabe.Kit\Thabe.Kit.csproj" />
   </ItemGroup>
 
 </Project>

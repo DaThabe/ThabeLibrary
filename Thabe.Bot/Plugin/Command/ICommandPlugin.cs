@@ -1,13 +1,14 @@
-﻿namespace Thabe.ChatBot.Plugin;
+﻿namespace Thabe.Bot.Plugin.Command;
 
 
 /// <summary>
 /// 指令插件接口
 /// </summary>
-public interface ICommandsPlugin : IPlugin
+public interface ICommandPlugin : IPlugin
 {
-    
 }
+
+
 
 
 /// <summary>
@@ -18,26 +19,28 @@ public static class CommandPluginExtend
     /// <summary>
     /// 插件元数据
     /// </summary>
-    private static readonly List<CommandPluginMeta> _plugins = new();
+    private static readonly List<ICommandPluginTemplate> _plugins = new();
 
     /// <summary>
     /// 用户对话上下文
     /// </summary>
     private static readonly Dictionary<string, CommandPluginContext> _memberContexts = new();
 
+    public static IEnumerable<ICommandPluginTemplate> Plugins => _plugins;
 
     /// <summary>
     /// 注册插件
     /// </summary>
     /// <exception cref="Exception"></exception>
-    public static void Register(this CommandPluginMeta pluginMeta)
+    public static void Register(this ICommandPluginTemplate plugin)
     {
-        if(_plugins.Any(x => x.Info.Id.Equals(pluginMeta.Info.Id, StringComparison.InvariantCultureIgnoreCase)))
+        if (_plugins.Any(x => x.Meta.Id.Equals(plugin.Meta.Id, StringComparison.InvariantCultureIgnoreCase)))
         {
             throw new Exception("插件id冲突");
         }
 
-        _plugins.Add(pluginMeta);
+        plugin.Reload();
+        _plugins.Add(plugin);
     }
 
     /// <summary>
@@ -60,7 +63,7 @@ public static class CommandPluginExtend
             action?.Invoke();
 
             //如果下来没有动作则移除上下文
-            if(context.CurrentAction == null)
+            if (context.CurrentAction == null)
             {
                 context.CurrentAction = context.FirstAction;
                 _memberContexts.Remove(id);
@@ -71,28 +74,29 @@ public static class CommandPluginExtend
 
 
         //获取用户输入的字符串
-        var cmd = receiver.MessageChain.GetPlainMessage();
-        if (string.IsNullOrWhiteSpace(cmd)) return;
+        var cmd_str = receiver.MessageChain.GetPlainMessage();
+        if (string.IsNullOrWhiteSpace(cmd_str)) return;
 
         //获取所有可执行动作
-        var all_excute_action = (from cmd_plugin in _plugins
-                                 let action_names = cmd_plugin.GetActionNames(cmd)
-                                 where action_names is not null
-                                 from name in action_names
-                                 select (name.MethodName, cmd_plugin, name.Trigger)).ToArray();
+        var all_excute = (from plugin in _plugins
+                                 from cmd in plugin.Meta!.Commands
+                                 where cmd.Trigger.IsTrigger(cmd_str)
+                                 select (cmd.MethodName, plugin, cmd.Trigger)).ToArray();
 
         //获取第一个可执行动作
-        var excute_action = all_excute_action.FirstOrDefault();
-        if (excute_action == (null, null, null)) return;
+        var excute = all_excute.FirstOrDefault();
+        if (excute == (null, null, null)) return;
 
-        //获取指令动作类型实例
-        var type = excute_action.cmd_plugin.Data.ActionsClass;
-        if (Activator.CreateInstance(type) is not ICommandsPlugin instance) return;
+
+        //创建插件实例
+        if (excute.plugin.PluginType == null) return;
+        if (Activator.CreateInstance(excute.plugin.PluginType) is not ICommandPlugin instance) return;
+
 
         //获取第一个动作方法实例
-        var method = type.GetTypeInfo().DeclaredMethods.FirstOrDefault(x =>
+        var method = excute.plugin.PluginType?.GetTypeInfo().DeclaredMethods.FirstOrDefault(x =>
         {
-            return x.Name.Equals(excute_action.MethodName, StringComparison.InvariantCultureIgnoreCase);
+            return x.Name.Equals(excute.MethodName, StringComparison.InvariantCultureIgnoreCase);
         });
         if (method == null) return;
         Action first_action = (Action)Delegate.CreateDelegate(typeof(Action), instance, method);
@@ -105,13 +109,13 @@ public static class CommandPluginExtend
             FirstAction = first_action,
             CurrentAction = first_action,
             PluginInstance = instance,
-            PluginMeta = excute_action.cmd_plugin,
-            MatchGroup = ((RegexTrigger)excute_action.Trigger).GetMatchGroup(cmd)
+            PluginTempalte = excute.plugin,
+            MatchGroup = ((RegexTrigger)excute.Trigger).GetMatchGroup(cmd_str)
         };
         first_action();
 
         //瞬态对话
-        if(_memberContexts[id].CurrentAction == _memberContexts[id].FirstAction)
+        if (_memberContexts[id].CurrentAction == _memberContexts[id].FirstAction)
         {
             _memberContexts.Remove(id);
         }
@@ -129,12 +133,10 @@ public static class CommandPluginExtend
         }
     }
 
- 
-
     /// <summary>
     /// 获取插件上下文实例
     /// </summary>
-    public static CommandPluginContext? GetPluginContext(this ICommandsPlugin plugin)
+    public static CommandPluginContext? GetPluginContext(this ICommandPlugin plugin)
     {
         return _memberContexts.FirstOrDefault(x => x.Value.PluginInstance == plugin).Value;
     }
@@ -146,7 +148,7 @@ public static class CommandPluginExtend
     /// <param name="plugin"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static string GetInputToken(this ICommandsPlugin plugin, string name)
+    public static string GetInputToken(this ICommandPlugin plugin, string name)
     {
         return plugin.GetPluginContext()!.MatchGroup[$"tokens_{name}"].Value;
     }
@@ -154,7 +156,7 @@ public static class CommandPluginExtend
     /// <summary>
     /// 获取输入的参数
     /// </summary>
-    public static string GetInputParam(this ICommandsPlugin plugin, string name)
+    public static string GetInputParam(this ICommandPlugin plugin, string name)
     {
         return plugin.GetPluginContext()!.MatchGroup[$"params_{name}"].Value;
     }
@@ -162,7 +164,7 @@ public static class CommandPluginExtend
     /// <summary>
     /// 设置动作上下文
     /// </summary>
-    public static void SetAtionContext(this ICommandsPlugin plugin, Action action)
+    public static void SetAtionContext(this ICommandPlugin plugin, Action action)
     {
         var context = plugin.GetPluginContext();
         if (context == null) return;
@@ -173,7 +175,7 @@ public static class CommandPluginExtend
     /// <summary>
     /// 获取消息接收器
     /// </summary>
-    public static MessageReceiverBase GetReceiver(this ICommandsPlugin plugin)
+    public static MessageReceiverBase GetReceiver(this ICommandPlugin plugin)
     {
         return plugin.GetPluginContext()!.Receiver;
     }
@@ -193,23 +195,24 @@ public class CommandPluginContext
     /// <summary>
     /// 指令动作类实例
     /// </summary>
-    public required ICommandsPlugin PluginInstance { get; init; }
+    public required ICommandPlugin PluginInstance { get; init; }
 
     /// <summary>
     /// 插件元信息
     /// </summary>
-    public required CommandPluginMeta PluginMeta { get; init; }
+    public required ICommandPluginTemplate PluginTempalte { get; init; }
+
 
     /// <summary>
     /// 初始动作
     /// </summary>
     public required Action FirstAction { get; set; }
 
-
     /// <summary>
     /// 当前动作
     /// </summary>
     public required Action? CurrentAction { get; set; }
+
 
     /// <summary>
     /// 消息接收器

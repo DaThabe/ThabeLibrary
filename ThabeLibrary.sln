@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thabe.Kit", "ThabeKit\Thabe.Kit.csproj", "{136F3A69-235E-4BE1-9306-3CA4066A3715}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thabe.Bot", "Thabe.Bot\Thabe.Bot.csproj", "{72DDABDF-587F-4336-A67B-817C74FC322C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thabe.Launch", "Debug\Thabe.Launch.csproj", "{25382BF5-F7A7-49FD-81E2-986694918B11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thabe.Bot.Plugin", "Thabe.Bot.Plugin\Thabe.Bot.Plugin.csproj", "{8673DAD3-18B0-430B-B420-FD09B86A8498}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thabe.ChatBot", "ThabeBot\Thabe.ChatBot.csproj", "{191DD80F-BBF5-4122-ADAD-A3BC1735915B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thabe.Kit", "Thabe.Kit\Thabe.Kit.csproj", "{ED345DA9-80DF-4C5F-87D2-6753B301A52C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thabe.ChatBot.Plugin", "Thabe.ChatBot.Plugin\Thabe.ChatBot.Plugin.csproj", "{51225311-181B-4340-9A8A-08BB33BBB3C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thabe.Bot.Launch", "Thabe.Bot.Launch\Thabe.Bot.Launch.csproj", "{944B409B-6784-4ADD-A938-505D0E2E8332}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,22 +17,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{136F3A69-235E-4BE1-9306-3CA4066A3715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{136F3A69-235E-4BE1-9306-3CA4066A3715}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{136F3A69-235E-4BE1-9306-3CA4066A3715}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{136F3A69-235E-4BE1-9306-3CA4066A3715}.Release|Any CPU.Build.0 = Release|Any CPU
-		{25382BF5-F7A7-49FD-81E2-986694918B11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{25382BF5-F7A7-49FD-81E2-986694918B11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{25382BF5-F7A7-49FD-81E2-986694918B11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{25382BF5-F7A7-49FD-81E2-986694918B11}.Release|Any CPU.Build.0 = Release|Any CPU
-		{191DD80F-BBF5-4122-ADAD-A3BC1735915B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{191DD80F-BBF5-4122-ADAD-A3BC1735915B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{191DD80F-BBF5-4122-ADAD-A3BC1735915B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{191DD80F-BBF5-4122-ADAD-A3BC1735915B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{51225311-181B-4340-9A8A-08BB33BBB3C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51225311-181B-4340-9A8A-08BB33BBB3C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51225311-181B-4340-9A8A-08BB33BBB3C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51225311-181B-4340-9A8A-08BB33BBB3C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72DDABDF-587F-4336-A67B-817C74FC322C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72DDABDF-587F-4336-A67B-817C74FC322C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72DDABDF-587F-4336-A67B-817C74FC322C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72DDABDF-587F-4336-A67B-817C74FC322C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8673DAD3-18B0-430B-B420-FD09B86A8498}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8673DAD3-18B0-430B-B420-FD09B86A8498}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8673DAD3-18B0-430B-B420-FD09B86A8498}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8673DAD3-18B0-430B-B420-FD09B86A8498}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED345DA9-80DF-4C5F-87D2-6753B301A52C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED345DA9-80DF-4C5F-87D2-6753B301A52C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED345DA9-80DF-4C5F-87D2-6753B301A52C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED345DA9-80DF-4C5F-87D2-6753B301A52C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{944B409B-6784-4ADD-A938-505D0E2E8332}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{944B409B-6784-4ADD-A938-505D0E2E8332}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{944B409B-6784-4ADD-A938-505D0E2E8332}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{944B409B-6784-4ADD-A938-505D0E2E8332}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

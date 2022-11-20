@@ -23,10 +23,7 @@ global using Thabe.Kit.Command;
 global using Thabe.Kit.Command.Trigger;
 global using Thabe.Kit.API.Com.Huaban;
 global using Thabe.Kit.Command.Expression;
-global using Thabe.ChatBot.Plugin;
+global using Thabe.Bot.Plugin;
 
-global using Thabe.ChatBot.Plugin.Meta;
-global using Thabe.ChatBot.QQ;
-
-
-ScriptOptions
+global using Thabe.Bot.Plugin.Command;
+global using Thabe.Bot.QQ;

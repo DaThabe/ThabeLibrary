@@ -1,13 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Thabe.ChatBot\Thabe.ChatBot.csproj" />
+    <ProjectReference Include="..\Thabe.Bot\Thabe.Bot.csproj" />
     <ProjectReference Include="..\Thabe.Kit\Thabe.Kit.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,7 @@
-﻿namespace Thabe.ChatBot;
+﻿namespace Thabe.Bot;
 
 
-internal static class Log
+public static class Log
 {
     public static void Write(MessageChain chain)
     {
@@ -16,6 +16,11 @@ internal static class Log
         }
 
         Write(sb.ToString());
+    }
+
+    public static void Write(Exception e)
+    {
+        Write(e.Message);
     }
 
     public static void Write(string msg)

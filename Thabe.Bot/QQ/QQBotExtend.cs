@@ -1,4 +1,4 @@
-﻿namespace Thabe.ChatBot.QQ;
+﻿namespace Thabe.Bot.QQ;
 
 
 /// <summary>
