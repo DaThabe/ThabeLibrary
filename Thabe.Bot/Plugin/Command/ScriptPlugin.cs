@@ -21,7 +21,7 @@ public abstract class ScriptPlugin : ICommandPluginTemplate
     /// <summary>
     /// 插件程序集
     /// </summary>
-    private AssemblyLoadContext? PluginAssembly;
+    private AssemblyLoadContext PluginAssembly;
 
 
     public required string TypeName { get; init; }
@@ -42,12 +42,15 @@ public abstract class ScriptPlugin : ICommandPluginTemplate
 
             var (assembly, type) = GetPlugin(TypeName, syntaxTree);
             var meta = type.GetCustomAttribute<CommandPluginConfigAttribute>();
+            if(meta == null)
+            {
+                throw new ArgumentNullException();
+            }
 
             //刷新数据
             Unload();
 
             PluginAssembly = assembly;
-
             PluginType = type;
             Meta = meta;
         }
@@ -58,15 +61,13 @@ public abstract class ScriptPlugin : ICommandPluginTemplate
         try
         {
             if(PluginType!= null) GC.SuppressFinalize(PluginType);
-            if (PluginType != null) GC.SuppressFinalize(Meta);
+            if (Meta != null) GC.SuppressFinalize(Meta);
 
             if(PluginAssembly != null)
             {
                 PluginAssembly.Unload();
                 GC.SuppressFinalize(PluginAssembly);
             }
-
-            (PluginType, PluginType, PluginAssembly) = (null, null, null);
         }
         catch (Exception e)
         {
@@ -101,7 +102,7 @@ public abstract class ScriptPlugin : ICommandPluginTemplate
                          where !string.IsNullOrEmpty(i.Location)
                          select MetadataReference.CreateFromFile(i.Location);
 
-        var mirai_ref = MetadataReference.CreateFromFile(typeof(MiraiBot).Assembly.Location);
+        var mirai_ref = MetadataReference.CreateFromFile(typeof(ScriptPlugin).Assembly.Location);
 
         // 指定编译选项。
         var assemblyName = $"{originalClassName}.g";

@@ -14,7 +14,15 @@ public class LocalCommandScriptPlugin : ScriptPlugin
 
     protected override string ReloadSourceCode()
     {
-        return File.ReadAllText(FilePath);
+        try
+        {
+            return File.ReadAllText(FilePath);
+        }
+        catch(Exception e)
+        {
+            Log.Write(e);
+            throw;
+        }
     }
 }
 
@@ -30,6 +38,19 @@ public class WebCommandScriptPlugin : ScriptPlugin
 
     protected override string ReloadSourceCode()
     {
-        return FileUrl.GetStringAsync().GetAwaiter().GetResult();
+        try
+        {
+            Log.Write($"正在加载网络脚本插件: [{FileUrl}]");
+            var code = FileUrl.GetStringAsync().GetAwaiter().GetResult();
+
+            Log.Write($"网络脚本插件下载成功: [{FileUrl}]");
+            return code;
+
+        }
+        catch (Exception e)
+        {
+            Log.Write(e);
+            throw;
+        }
     }
 }

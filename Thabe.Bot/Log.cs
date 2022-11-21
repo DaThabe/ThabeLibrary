@@ -20,7 +20,14 @@ public static class Log
 
     public static void Write(Exception e, LogLevel level = LogLevel.ConsoleAndMaster)
     {
-        Write(e.Message, level);
+        if ((level & LogLevel.Console) == LogLevel.Console)
+        {
+            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]\n{e}");
+        }
+        if ((level & LogLevel.ConsoleAndMaster) == LogLevel.ConsoleAndMaster)
+        {
+            MessageManager.SendFriendMessageAsync(QQBot.Master, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]\n{e.Message}");
+        }
     }
 
     public static void Write(string msg, LogLevel level = LogLevel.Console)

@@ -68,6 +68,14 @@ public class QQBot
     public async Task LaunchAsync()
     {
         Log.Write("Bot 启动中");
-        await _miraiBot.LaunchAsync();
+
+        try
+        {
+            await _miraiBot.LaunchAsync();
+        }
+        catch (Exception ex)
+        {
+            Log.Write(ex);
+        }
     }
 }

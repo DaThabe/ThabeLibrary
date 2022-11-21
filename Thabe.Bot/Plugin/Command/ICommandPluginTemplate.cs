@@ -16,12 +16,12 @@ public interface ICommandPluginTemplate
     /// <summary>
     /// 插件类 类型
     /// </summary>
-    Type? PluginType { get; }
+    Type PluginType { get; }
 
     /// <summary>
     /// 指令插件元数据
     /// </summary>
-    ICommandPluginMeta? Meta { get; }
+    ICommandPluginMeta Meta { get; }
 
 
     /// <summary>
